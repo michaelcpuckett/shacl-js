@@ -107,9 +107,7 @@ RDFLibGraphIterator.prototype.next = function () {
 
 function ensureBlankId(component) {
     if (component.termType === "BlankNode") {
-        if (typeof(component.value) !== "string") {
-            component.value = "_:" + component.id;
-        }
+        component.value = "_:" + component.id;
         return component;
     }
 

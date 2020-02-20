@@ -9,7 +9,7 @@
   "author": "Holger Knublauch <holger@topquadrant.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "rdflib": "^0.15.0"
+    "rdflib": "^1.0.6"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
