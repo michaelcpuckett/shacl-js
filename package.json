@@ -4,7 +4,8 @@
   "description": "SHACL.JS Validator",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "browserify": "browserify index.js --standalone SHACLValidator > dist/shacl.js"
   },
   "author": "Holger Knublauch <holger@topquadrant.com>",
   "license": "Apache-2.0",
@@ -15,9 +16,9 @@
     "string-to-stream": "3.0.1"
   },
   "devDependencies": {
+    "browserify": "^16.5.0",
     "debug": "4.1.1",
     "gulp": "^3.9.1",
-    "gulp-browserify": "^0.5.1",
     "gulp-cli": "^1.4.0",
     "gulp-serve": "^1.4.0",
     "http-browserify": "^1.7.0",
