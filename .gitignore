@@ -1,6 +1,3 @@
 node_modules
-.idea
-public/data/*
-public/test.js
-public/test_cases.json
+dist/shacl.js
 public/shacl.js

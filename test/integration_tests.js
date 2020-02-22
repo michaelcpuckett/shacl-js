@@ -1,7 +1,7 @@
+var assert = require("assert");
 var SHACLValidator = require("../index");
 var fs = require("fs");
 // expected result
-var $rdf = require("rdflib");
 var rdflibgraph = require("../src/rdflib-graph");
 var RDFLibGraph = rdflibgraph.RDFLibGraph;
 
@@ -12,7 +12,7 @@ var ExpectedValidationResult = function(solution) {
     this._focusNode = solution["focusNode"].termType === "BlankNode" ? "_:" + solution["focusNode"].id : solution["focusNode"].value;
     this._severity = solution["severity"].value;
     this._constraint = solution["constraint"].value;
-    this._shape = solution["shape"].value;
+    this._shape = solution["shape"].termType === "BlankNode" ? "_:" + solution["shape"].id : solution["shape"].value;
 };
 
 ExpectedValidationResult.prototype.id = function() {
@@ -81,23 +81,23 @@ var isBlank = function(s) {
     return s != null && (s.indexOf("_:") === 0 || s.indexOf("_g_") > -1);
 }
 
-var validateReports = function(test, input) {
+var validateReports = function(done, input) {
     var data = fs.readFileSync(input).toString();
 
     expectedResult(data, "text/turtle", function(expectedReport, e) {
         if (e != null) {
             console.log(e);
-            test.ok(e == null);
-            test.done();
+            assert.equal(e, null);
+            done();
         } else {
             new SHACLValidator().validate(data, "text/turtle", data, "text/turtle", function (e, report) {
                 if (e != null) {
                     console.log(e);
-                    test.ok(e == null);
-                    test.done();
+                    assert.equal(e, null);
+                    done();
                 } else {
-                    test.ok(report.conforms() === expectedReport.conforms());
-                    test.ok(report.results().length === expectedReport.results().length);
+                    assert.equal(report.conforms(), expectedReport.conforms());
+                    assert.equal(report.results().length, expectedReport.results().length);
                     var results = report.results() || [];
                     var expectedResults = expectedReport.results();
                     for (var i=0; i <results.length; i++) {
@@ -112,9 +112,9 @@ var validateReports = function(test, input) {
                             }
 
                         }
-                        test.ok(found === true);
+                        assert.equal(found, true);
                     }
-                    test.done();
+                    done();
                 }
             });
         }
@@ -122,10 +122,12 @@ var validateReports = function(test, input) {
 };
 
 
-fs.readdirSync(__dirname + "/data/core").forEach(function(dir) {
-    fs.readdirSync(__dirname + "/data/core/" + dir).forEach(function(file) {
-        exports[dir + "-test-" + file] = function (test) {
-            validateReports(test, __dirname + "/data/core/" + dir + "/" + file);
-        };
+describe('integration tests', () => {
+    fs.readdirSync(__dirname + "/data/core").forEach(function(dir) {
+        fs.readdirSync(__dirname + "/data/core/" + dir).forEach(function(file) {
+            it(dir + "-test-" + file, (done) => {
+                validateReports(done, __dirname + "/data/core/" + dir + "/" + file);
+            });
+        });
     });
 });

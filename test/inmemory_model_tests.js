@@ -1,5 +1,8 @@
+var assert = require("assert");
 var SHACLValidator = require("../index");
-var fs = require("fs");
+var rdf = require("rdf-ext");
+var rdfFS = require("rdf-utils-fs");
+
 
 var results = {
     "http://datashapes.org/sh/tests/functionregistry/jsconstraintcomponent/data#InvalidExample": {
@@ -11,35 +14,33 @@ var results = {
     }
 };
 
-exports.loadFromMemoryModelTest = function(test) {
-    var validator = new SHACLValidator();
+describe('validateFromModels', () => {
+    it('takes in memory datasets', async function() {
+        var validator = new SHACLValidator();
 
+        var url = "http://example.org/ns/shapesConstraints.js";
+        var localFile = __dirname + "/data/functionregistry/jsconstraintcomponent/library.js";
+        var dataFile = __dirname + "/data/functionregistry/jsconstraintcomponent/data.ttl"
 
-    var url = "http://example.org/ns/shapesConstraints.js";
-    var localFile = __dirname + "/data/functionregistry/jsconstraintcomponent/library.js";
-    var data = fs.readFileSync(__dirname + "/data/functionregistry/jsconstraintcomponent/data.ttl").toString();
+        var dataGraph = await rdf.dataset().import(rdfFS.fromFile(dataFile));
+        var shapesGraph = dataGraph.clone();
 
-    var dataGraph = SHACLValidator.$rdf.graph();
-    var shapesGraph = SHACLValidator.$rdf.graph();
-
-    SHACLValidator.$rdf.parse(data, dataGraph, "test:graph", "text/turtle", function(e) {
-        test.ok(e == null);
-        SHACLValidator.$rdf.parse(data, shapesGraph, "test:graph", "text/turtle", function(e) {
-            test.ok(e == null);
+        return new Promise((resolve, reject) => {
             validator.registerJSLibrary(url, localFile, function(e) {
-                test.ok(e == null);
+                assert.equal(e, null);
                 validator.validateFromModels(dataGraph, shapesGraph, function (e, report) {
-                    test.ok(report.conforms() === false);
-                    test.ok(report.results().length === 2);
+                    assert.equal(e, null);
+                    assert.equal(report.conforms(), false);
+                    assert.equal(report.results().length, 2);
                     report.results().forEach(function(result) {
                         var expected = results[result.focusNode()];
-                        test.ok(expected != null);
-                        test.ok(result.path() === expected.path);
-                        test.ok(result.message() === expected.message);
+                        assert.notEqual(expected, null);
+                        assert.equal(result.path(), expected.path);
+                        assert.equal(result.message(), expected.message);
                     });
-                    test.done();
+                    resolve();
                 });
             });
         });
     });
-};
+})
