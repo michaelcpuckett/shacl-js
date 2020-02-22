@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>SHACL Playground</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" />
+		<style type="text/css">
+			
+			body {
+				background: #f0f0f0;
+				font-family: sans-serif;
+			}
+			
+			a:link {
+				color: #404040;
+			}
+			a:visited {
+    			color: #404040;
+			}
+			a:hover {
+    			color: blue;
+			}
+			a:active {
+    			color: blue;
+			}
+			
+			.h1 {
+				font-size: 22px;
+				font-weight: bold;
+			}
+			
+			.h2 {
+				font-size: 18px;
+				font-weight: bold;
+				padding-bottom: 8px;
+				padding-top: 8px;
+			}
+			
+			body {
+				margin: 0;
+			}
+			
+			.call {
+				white-space: nowrap;
+			}
+			
+			.header {
+				background: #c0c0e0;
+				border-bottom: 1px solid gray;
+				border-top: 1px solid gray;
+				padding: 8px;
+			}
+			
+			.main {
+				margin: 8px;
+			}
+			
+			.component-details {
+				background: #fffaff;
+				border: 1px solid #c0c0c0;
+				padding: 4px;
+				margin-left: 16px;
+				margin-bottom: 4px;
+				border-radius: 5px;
+				font-size: 14px;
+			}
+			
+			.component-details-header {
+				font-weight: bold;
+			}
+			
+			.icon {
+				width: 16px;
+				height: 16px;
+				margin-right: 2px;
+				float2: left;
+				display: inline-block;
+			}
+						
+			.icon-Class {
+				background-image: url("images/Class-16x16.png");
+			}
+			
+			.icon-Constraint {
+				background-image: url("images/Constraint-16x16.png");
+			}
+			
+			.icon-ConstraintComponent {
+				background-image: url("images/ConstraintComponent-16x16.png");
+			}
+			
+			.icon-ConstraintComponents {
+				background-image: url("images/ConstraintComponents-16x16.png");
+			}
+			
+			.icon-Individual {
+				background-image: url("images/Individual-16x16.png");
+			}
+			
+			.icon-Literal {
+				background-image: url("images/Literal-16x16.png");
+			}
+			
+			.icon-NodeShape {
+				background-image: url("images/NodeShape-16x16.png");
+			}
+			
+			.icon-Property {
+				background-image: url("images/Property-16x16.png");
+			}
+			
+			.icon-PropertyShape {
+				background-image: url("images/PropertyShape-16x16.png");
+			}
+			
+			.icon-Shapes {
+				background-image: url("images/Shapes-16x16.png");
+			}
+			
+			.icon-Targets {
+				background-image: url("images/Targets-16x16.png");
+			}
+						
+			.icon-XSDboolean {
+				background-image: url("images/XSDboolean-16x16.png");
+			}
+						
+			.icon-XSDdate {
+				background-image: url("images/XSDdate-16x16.png");
+			}
+						
+			.icon-XSDdateTime {
+				background-image: url("images/XSDdateTime-16x16.png");
+			}
+						
+			.icon-XSDfloat {
+				background-image: url("images/XSDfloat-16x16.png");
+			}
+						
+			.icon-XSDinteger {
+				background-image: url("images/XSDinteger-16x16.png");
+			}
+						
+			.icon-XSDstring {
+				background-image: url("images/XSDstring-16x16.png");
+			}
+			
+			.status {
+				font-weight: bold;
+				font-size: 12px;
+			}
+			
+			.statusError {
+				color: red;
+			}
+			
+			.subheading {
+				font-weight: bold;
+				font-size: 14px;
+				padding-top: 8px;
+			}
+			
+			.validator-function {
+				background: white;
+				padding: 4px;
+				overflow: auto;
+				margin: 0;
+				max-height: 100px;
+				border: 1px solid grey;
+			}
+			
+			.tree-twistie {
+				display: inline-block;
+				float2: left;
+				width: 16px;
+				height: 16px;
+			}
+			
+			.tree-node {
+				white-space: nowrap;
+			}
+			
+			.tree-node-body {
+				display: inline-block;
+				/* float2: left; */
+				white-space: nowrap;
+			}
+			
+			.tree-node-children {
+				padding-left: 18px;
+			}
+			
+			.tree-twistie-openable {
+				cursor: pointer;
+			}
+			
+		</style>
+		<script type="text/javascript" src="shacl.js"></script>
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+		<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="shacl-playground.js"></script>
+	</head>
+	<body>
+		<div class="header">
+			<div class="h1" style="float: left">SHACL Playground</div>
+			<div style="float: left; padding-left: 40px; margin-top: 6px; font-size: 14px">
+				<span>A constraint validator for the <a href="http://www.w3.org/TR/shacl/">Shapes Constraint Language</a>, written in JavaScript.</span>
+				<span style="color: black; font-weight: bold">Work in Progress!</span>
+			</div>
+			<div style="clear: both"></div>
+		</div>
+		<div class="main">
+			<div style="float: left; width: 50%; min-width: 400px" id="shapesGraph">
+				<div class="h2">Shapes Graph</div>
+				<div>
+					<textarea spellcheck="false" id="shapesGraphArea" rows="25" style="width: 95%"></textarea>
+				</div>
+				<div style="padding-top: 2px">
+					<button id="shapesGraphButton">Update</button>
+					<span>&nbsp;&nbsp;&nbsp;</span>
+					<label for="shapesGraphTypeSelect">Format: </label>
+					<select id="shapesGraphTypeSelect">
+						<option value="text/turtle">Turtle</option>
+						<option value="application/ld+json">JSON-LD</option>
+					</select>
+					<span>&nbsp;&nbsp;&nbsp;</span>
+					<!--<span style="font-size: 12px; white-space: nowrap;">
+						<span>Always included: </span>
+						<a href="shacl.ttl" target="_new">shacl.ttl</a>&nbsp;<a href="dash.ttl" target="_new">dash.ttl</a>
+					</span>-->
+				</div>
+				<div><span class="status" id="shapesStatus">&nbsp;</span></div>
+			</div>
+			<div style="float: left; width: 50%" id="dataGraph">
+				<div>
+					<div class="h2" style="float: left">Data Graph</div>
+					<div style="float: left; padding-top: 7px; margin-left: 60px">
+						<select id="dataExampleSelect">
+							<option value="personsJSON">Example Data in JSON-LD Format</option>
+							<option value="personsTTL">Example Data in Turtle Format</option>
+						</select>
+					</div>
+					<div style="clear: both"></div>
+				</div>
+				<div>
+					<textarea id="dataGraphArea" rows="25" style="width: 95%" spellcheck="false"></textarea>
+				</div>
+				<div style="padding-top: 2px">
+					<button id="dataGraphButton">Update</button>
+					<span>&nbsp;&nbsp;&nbsp;</span>
+					<label for="dataGraphTypeSelect">Format: </label>
+					<select id="dataGraphTypeSelect">
+						<option value="text/turtle">Turtle</option>
+						<option value="application/ld+json">JSON-LD</option>
+					</select>
+				</div>
+				<div><span class="status" id="dataStatus">&nbsp;</span></div>
+			</div>
+			<div style="clear: both"></div>
+		</div>
+		<div class="main">
+			<div style="float: left; width: 50%; min-width: 400px;">
+				<div class="h2" style="opacity: .5">Inferred Graph</div>
+				<div style="overflow: auto; width: 95%; height: 400px; border:1px solid gray; background: white">
+					<textarea id="inferred" disabled readonly="readonly" style="height:400px; width: 100%"></textarea>
+				</div>
+			</div>
+			<div style="float: left; width: 50%">
+				<div class="h2" id="results-area-heading">Validation Report <span id="results-count"></span></div>
+				<textarea id="resultsArea" readonly="readonly" style="height:400px; width: 95%"></textarea>
+			</div>
+			<div style="clear: both"></div>
+		</div>
+		<div class="main">
+			<div class="h2">About SHACL</div>
+			<p>
+				SHACL has been defined by a <a href="http://www.w3.org/2014/data-shapes/wiki/Main_Page">W3C Working Group</a>
+				with the goal to become a widely used standard for describing structural constraints on data graphs and
+				validate RDF instance data against those.
+			</p>
+			<p>
+				In a nutshell, a SHACL processor takes a <em>shapes graph</em> and a <em>data graph</em> as input.
+				Both can be entered here using data formats such as Turtle or JSON-LD.
+				The shapes graph defines so-called <em>shapes</em> which are a collection of <em>constraints</em>.
+				A shape also tells the engine for which nodes in the data graph it applies to (using <em>targets</em>).
+				Constraints are of a type, called <em>constraint components</em>.
+			</p>
+		</div>
+		<div class="main">
+			<div class="h2">This Implementation</div>
+			<p>
+				This service was originally implemented in JavaScript by <a href="http://knublauch.com">Holger Knublauch</a>.
+				Copyright &copy; <a href="http://topquadrant.com">TopQuadrant, Inc</a>. All rights reserved.
+				The service is free to use from this web site and the source code can be found
+				at <a href="https://github.com/zazuko/shacl-js">SHACL-JS GitHub project</a>.
+			</p>
+			<p>
+				The design follows the <a href="http://www.w3.org/TR/shacl-js/">SHACL-JS</a> extension mechanism for SHACL.
+				Each constraint component (such as <code>sh:minCount</code>) is backed by a JavaScript function.
+				The linkage from constraint components to these JavaScript functions is entirely declarative via RDF triples in the shapes graph.
+				The built-in SHACL Core components are implemented in the same way as any user-defined extension.
+				As a result, SHACL is extensible for any kind of constraint that can be expressed in JavaScript,
+				while the shape and constraint definitions can be distributed using linked data standards.
+			</p>
+		</div>
+	</body>
+</html>
